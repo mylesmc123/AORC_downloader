@@ -7,18 +7,18 @@ import zipfile
 import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import zipfile
+import glob, os
 
 stormName = "Ida"
+outDir = rf"C:\Class\Day 1\Workshop Files\Python for Model Data\AORC_Precip_{stormName}"
 # Convert string date to to datetime objects for iterating
 startDate = datetime.strptime("08AUG2021", "%d%b%Y")
 endDate = datetime.strptime("04SEP2021", "%d%b%Y")
 
 # Iterate by months from startdate to endDate
 date = startDate
-quitDate = endDate + relativedelta(months=+1)
 while date < (endDate + relativedelta(months=+1)):
-    # convert date to format needed for URL
+    # Convert date to format needed for URL
     date_str = datetime.strftime(date, "%Y%m")
     # Download each days zip file.
     URL = f"https://hydrology.nws.noaa.gov/aorc-historic/AORC_LMRFC_4km/LMRFC_precip_partition/AORC_APCP_4KM_LMRFC_{date_str}.zip"
@@ -27,7 +27,21 @@ while date < (endDate + relativedelta(months=+1)):
     
     # Unzip hourly netCDF files to a single directory. 
     with zipfile.ZipFile(f"AORC_APCP_4KM_LMRFC_{date_str}.zip", 'r') as zip_ref:
-        zip_ref.extractall(rf"C:\Class\Day 1\Workshop Files\Python for Model Data\AORC_Precip_{stormName}")
+        zip_ref.extractall(outDir)
     
     # Go to next day
     date = date + relativedelta(months=+1)
+
+# Trim unzipped data to start - end dates
+for file in os.listdir(outDir):
+    # Get all *.nc4 files
+    if file.endswith(".nc4"):
+        filepath = os.path.join(outDir, file)
+        # get the date string
+        filedate = file.split(".")[0][-10:-2]
+        # convert the date string to a datetime object
+        filedate_dt = datetime.strptime(filedate, "%Y%m%d")
+        # delete file if date of the file is out of our starDate to EndDate range.
+        if (filedate_dt < startDate) or (filedate_dt > endDate):
+            os.remove(filepath)
+        
