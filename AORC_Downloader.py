@@ -10,10 +10,10 @@ from dateutil.relativedelta import relativedelta
 import glob, os
 
 stormName = "Ida"
-outDir = rf"C:\Class\Day 1\Workshop Files\Python for Model Data\AORC_Precip_{stormName}"
+outDir = rf"C:\Class\Day 1\Workshop Files\Python for Model Data\AORC_Precip\{stormName}"
 # Convert string date to to datetime objects for iterating
-startDate = datetime.strptime("08AUG2021", "%d%b%Y")
-endDate = datetime.strptime("04SEP2021", "%d%b%Y")
+startDate = datetime.strptime("28AUG2021", "%d%b%Y")
+endDate = datetime.strptime("01SEP2021", "%d%b%Y")
 
 # Iterate by months from startdate to endDate
 date = startDate
