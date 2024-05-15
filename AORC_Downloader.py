@@ -9,19 +9,21 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import glob, os
 
-stormName = "Ida"
-outDir = rf"C:\Class\Day 1\Workshop Files\Python for Model Data\AORC_Precip\{stormName}"
+# stormName = "RTF_05JUL2022"
+stormName = "nonTC_Mar2022"
+outDir = rf"V:\projects\p00659_dec_glo_phase3\02_analysis\nonTropical Calibration Event Selection\aorc\{stormName}"
 # Convert string date to to datetime objects for iterating
-startDate = datetime.strptime("28AUG2021", "%d%b%Y")
-endDate = datetime.strptime("01SEP2021", "%d%b%Y")
+startDate = datetime.strptime("19MAR2022", "%d%b%Y")
+endDate = datetime.strptime("19APR2022", "%d%b%Y")
 
 # Iterate by months from startdate to endDate
 date = startDate
-while date < (endDate + relativedelta(months=+1)):
+while date <= (endDate):
     # Convert date to format needed for URL
     date_str = datetime.strftime(date, "%Y%m")
     # Download each days zip file.
-    URL = f"https://hydrology.nws.noaa.gov/aorc-historic/AORC_LMRFC_4km/LMRFC_precip_partition/AORC_APCP_4KM_LMRFC_{date_str}.zip"
+    URL = f"https://hydrology.nws.noaa.gov/pub/AORC/V1.1/LMRFC_4km/precipitation/AORC_APCP_4KM_LMRFC_{date_str}.zip"
+    
     response = requests.get(URL, verify=False)
     open(f"AORC_APCP_4KM_LMRFC_{date_str}.zip", "wb").write(response.content)
     
